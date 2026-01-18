@@ -1,0 +1,171 @@
+/* Custom CSS for RoboSUST React App */
+
+/* Ensure flexslider images display correctly */
+.flexslider {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.flexslider .slides {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.flexslider .slides>li {
+    position: relative;
+    display: none;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.flexslider .slides img {
+    width: 100%;
+    display: block;
+}
+
+.flex-viewport {
+    max-height: 2000px;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+
+.loading .flex-viewport {
+    max-height: 300px;
+}
+
+/* Hero slider background holder */
+.background-holder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+/* Ensure sections have proper height */
+.flexslider-simple {
+    min-height: 100vh;
+}
+
+.h-full {
+    height: 100vh;
+}
+
+/* Overlay effects */
+.overlay {
+    position: relative;
+}
+
+.overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.overlay-freya::before {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/* Ensure content is above overlay */
+.container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Alumni image styles */
+.image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.image-container .alumni {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.image-info {
+    padding: 15px;
+    background: white;
+    text-align: center;
+}
+
+/* Image wrapper for events */
+.image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Custom row spacing */
+.custom-row {
+    margin-top: 20px;
+}
+
+.event-row {
+    margin-top: 20px;
+}
+
+/* Flexslider navigation arrows */
+.flex-direction-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    pointer-events: none;
+}
+
+.flex-direction-nav a {
+    pointer-events: all;
+    color: white;
+    font-size: 40px;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.flex-direction-nav a:hover {
+    opacity: 1;
+}
+
+/* Ensure proper z-index for navbar */
+.znav-container {
+    position: relative;
+    z-index: 1000;
+}
+
+/* Animation helper classes */
+.overflow-hidden {
+    overflow: hidden;
+}
+
+/* Parallax smooth scrolling */
+.parallax {
+    will-change: transform;
+}

@@ -2,14 +2,67 @@ import React, { useEffect } from 'react';
 
 const Home = () => {
     useEffect(() => {
-        // Initialize Flexslider if needed
-        if (window.$ && window.$.fn.flexslider) {
-            window.$('.flexslider').flexslider({
-                animation: "slide",
-                controlNav: false,
-                directionNav: true,
-            });
-        }
+        // Wait for all scripts to load, then initialize plugins
+        const initializePlugins = () => {
+            // Initialize Flexslider
+            if (window.$ && window.$.fn.flexslider) {
+                setTimeout(() => {
+                    window.$('.flexslider').flexslider({
+                        animation: "slide",
+                        controlNav: false,
+                        directionNav: true,
+                        slideshow: true,
+                        slideshowSpeed: 7000,
+                        animationSpeed: 600,
+                        initDelay: 0,
+                        randomize: false,
+                    });
+                }, 100);
+            }
+
+            // Initialize Rellax for parallax effects
+            if (window.Rellax) {
+                setTimeout(() => {
+                    new window.Rellax('.parallax', {
+                        speed: -2,
+                        center: false,
+                        wrapper: null,
+                        round: true,
+                        vertical: true,
+                        horizontal: false
+                    });
+                }, 200);
+            }
+
+            // Initialize GSAP animations
+            if (window.TweenMax) {
+                setTimeout(() => {
+                    // Animate elements with data-zanim attribute
+                    const animElements = document.querySelectorAll('[data-zanim]');
+                    animElements.forEach((el) => {
+                        try {
+                            const animData = JSON.parse(el.getAttribute('data-zanim'));
+                            window.TweenMax.from(el, 1, animData.from);
+                        } catch (e) {
+                            // Ignore parsing errors
+                        }
+                    });
+                }, 300);
+            }
+
+            // Remove preloader
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }
+        };
+
+        // Call initialization after a short delay to ensure all scripts are loaded
+        const timer = setTimeout(initializePlugins, 500);
+
+        return () => clearTimeout(timer);
     }, []);
 
     return (

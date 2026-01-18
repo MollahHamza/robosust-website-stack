@@ -37,36 +37,23 @@ const Agp = () => {
                 </p>
             </section>
 
-            {/* AGP V7.0 Section */}
-            <section style={{ maxWidth: '90%', margin: '40px auto', padding: '30px', background: '#fff3cd', borderRadius: '12px', boxShadow: '0px 5px 15px rgba(0,0,0,0.1)', textAlign: 'center', borderLeft: '8px solid #ff9800', transition: '0.3s ease-in-out' }}>
-                <h2 style={{ color: '#d61c4e', fontSize: '36px', marginBottom: '15px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                    🚀 Auto Grand Prix V7.0 🚀
+            {/* AGP Coming Soon V8 Section */}
+            <section style={{ maxWidth: '90%', margin: '40px auto', padding: '50px 30px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '12px', boxShadow: '0px 8px 20px rgba(0,0,0,0.2)', textAlign: 'center', transition: '0.3s ease-in-out' }}>
+                <h2 style={{ color: '#ffffff', fontSize: '48px', marginBottom: '20px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
+                    🎯 Auto Grand Prix V8.0 🎯
                 </h2>
-                <p style={{ color: '#333', fontSize: '20px', lineHeight: '1.8', marginBottom: '20px', padding: '0 10px' }}>
-                    It's finally time to unveil our much-awaited flagship event on campus—<strong>"Auto Grand Prix V7.0"</strong>—marking its <strong>seventh consecutive year!</strong>
+                <p style={{ color: '#f0f0f0', fontSize: '28px', fontWeight: 'bold', marginBottom: '30px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    Coming Soon!
                 </p>
-                <p style={{ color: '#555', fontSize: '18px', lineHeight: '1.7', marginBottom: '20px', padding: '0 10px' }}>
-                    This event is your chance to put what you learned in the LFR workshop into practice. But more than that,
-                    it's a stepping stone into the world of <strong>competitive robotics</strong>, opening doors to endless opportunities.
+                <p style={{ color: '#ffffff', fontSize: '20px', lineHeight: '1.8', marginBottom: '25px', padding: '0 20px', maxWidth: '800px', margin: '0 auto 25px' }}>
+                    Get ready for the <strong>8th edition</strong> of our flagship robotics competition!
+                    The biggest and most exciting AGP event yet is on the horizon.
                 </p>
-                <p style={{ color: '#333', fontSize: '20px', fontWeight: 'bold', background: '#ff9800', padding: '10px 15px', borderRadius: '8px', display: 'inline-block' }}>
-                    🏆 Prize Pool: 8K! 🥇 Winner: 5K 🥈 Runner-up: 3K
+                <p style={{ color: '#fff3cd', fontSize: '24px', fontWeight: 'bold', marginTop: '30px' }}>
+                    🚀 Stay Tuned for Updates! 🚀
                 </p>
-                <p style={{ color: '#555', fontSize: '18px', lineHeight: '1.7', marginTop: '20px' }}>
-                    📍 <strong>Venue:</strong> IICT Building, 2nd Floor, SUST
-                    <br />
-                    🔗 <strong>Registration Link:</strong>{' '}
-                    <a href="https://forms.gle/BBsCeWc5SA718fZu6" target="_blank" rel="noopener noreferrer" style={{ color: '#d61c4e', textDecoration: 'none', fontWeight: 'bold' }}>
-                        Register Now!
-                    </a>
-                    <br />
-                    📅 <strong>Deadline:</strong> 20th February, 2025
-                </p>
-
-                <p id="countdown" style={{ color: '#d61c4e', fontSize: '24px', fontWeight: 'bold', marginTop: '20px' }}></p>
-
-                <p style={{ color: '#d61c4e', fontSize: '22px', fontWeight: 'bold', textTransform: 'uppercase', marginTop: '20px' }}>
-                    Don't miss this opportunity! Register NOW! 🚀
+                <p style={{ color: '#ffffff', fontSize: '16px', marginTop: '20px', opacity: 0.9 }}>
+                    Follow us on social media for registration details and event announcements
                 </p>
             </section>
         </>
