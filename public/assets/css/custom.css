@@ -1,16 +1,25 @@
 /* Custom CSS for RoboSUST React App */
 
-/* Hero slider background holder */
+/* Hero slider background holder - Force visibility and positioning */
 .background-holder {
-    position: absolute;
+    position: absolute !important;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 0;
+    width: 100% !important;
+    height: 100% !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    z-index: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure section container allows absolute positioning of background */
+section {
+    position: relative !important;
 }
 
 /* Ensure sections have proper height */
@@ -23,6 +32,7 @@
     position: relative;
 }
 
+/* Force overlay pseudo-element to appear above background but below content */
 .overlay::before {
     content: '';
     position: absolute;
@@ -31,29 +41,40 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.3);
-    z-index: 1;
+    z-index: 1 !important;
+    pointer-events: none;
+    /* Allow clicking through overlay */
 }
 
+/* Darker overlay for hero */
 .overlay-freya::before {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5) !important;
 }
 
 /* Ensure content is above overlay */
 .container {
     position: relative;
-    z-index: 2;
+    z-index: 2 !important;
 }
 
-/* Alumni image styles */
+/* Alumni image styles - Fix for profile shapes */
 .image-container {
     position: relative;
     overflow: hidden;
     border-radius: 8px;
+    background: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
 .image-container .alumni {
     width: 100%;
-    height: 300px;
+    height: 350px;
+    /* Fixed height for consistency */
     object-fit: cover;
     display: block;
 }
@@ -62,6 +83,10 @@
     padding: 15px;
     background: white;
     text-align: center;
+}
+
+.image-info p {
+    margin-bottom: 5px;
 }
 
 /* Image wrapper for events */
@@ -184,4 +209,28 @@ main {
 .page-transition-exit-active {
     opacity: 0;
     transition: opacity 0.3s ease-in;
+}
+
+/* Text utility overrides */
+.color-white {
+    color: #fff !important;
+}
+
+.fw-500 {
+    font-weight: 500 !important;
+}
+
+.text-uppercase {
+    text-transform: uppercase !important;
+}
+
+/* Additional fix for potentially hidden elements from base style.css */
+[data-zanim-timeline],
+[data-zanim-xs],
+[data-zanim-sm],
+[data-zanim-md],
+[data-zanim-lg],
+[data-zanim-xl] {
+    opacity: 1 !important;
+    visibility: visible !important;
 }

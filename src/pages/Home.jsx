@@ -256,19 +256,26 @@ const Home = () => {
 
             {/* Members Section */}
             <section className="text-center">
-                <div className="row">
-                    {members.map((member, index) => (
-                        <div key={index} className="col-lg-4 col-md-6 col-sm-12 mb-4">
-                            <div className="image-container">
-                                <img className="alumni" src={`/assets/images/home/members/${member.img}`} alt="Alumni" />
-                                <div className="image-info">
-                                    <p><strong>{member.name}</strong></p>
-                                    <p>{member.dept}</p>
-                                    <p>Batch: {member.batch}</p>
+                <div className="container">
+                    <div className="row">
+                        {members.map((member, index) => (
+                            <div key={index} className="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <div className="image-container" style={{ boxShadow: '0 5px 15px rgba(0,0,0,0.1)', borderRadius: '10px', overflow: 'hidden' }}>
+                                    <img
+                                        className="alumni"
+                                        src={`/assets/images/home/members/${member.img}`}
+                                        alt={member.name}
+                                        style={{ width: '100%', height: '350px', objectFit: 'cover' }}
+                                    />
+                                    <div className="image-info" style={{ padding: '20px', backgroundColor: '#fff' }}>
+                                        <p style={{ margin: '0', fontSize: '1.1rem', fontWeight: 'bold' }}>{member.name}</p>
+                                        <p style={{ margin: '5px 0 0', color: '#666' }}>{member.dept}</p>
+                                        <p style={{ margin: '0', fontSize: '0.9rem', color: '#888' }}>Batch: {member.batch}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </section>
         </>
