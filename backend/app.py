@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173", "https://*.netlify.app", "https://*.onrender.com"])
 
 db.init_app(app)
 login_manager = LoginManager()
