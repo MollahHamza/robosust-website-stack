@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, supports_credentials=True, origins=["http://localhost:5173", "https://*.netlify.app", "https://*.onrender.com"])
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 db.init_app(app)
 login_manager = LoginManager()
@@ -507,6 +507,8 @@ def seed_data():
     db.session.commit()
     return jsonify({'success': True, 'message': 'Data seeded successfully'})
 
+# Always run init_db so gunicorn also initializes the database
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True, port=5000)
