@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom';
 import {
-  checkAuth, logout, seedData,
+  checkAuth, logout, seedData, isLoggedIn,
   getAchievements, createAchievement, updateAchievement, deleteAchievement,
   getInitiatives, createInitiative, updateInitiative, deleteInitiative,
   getWorkshops, createWorkshop, updateWorkshop, deleteWorkshop,
@@ -17,6 +17,13 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Quick local check first
+    if (!isLoggedIn()) {
+      navigate('/admin');
+      return;
+    }
+
+    // Validate token with server
     const checkAuthentication = async () => {
       try {
         const res = await checkAuth();
@@ -26,6 +33,7 @@ function Dashboard() {
           navigate('/admin');
         }
       } catch (error) {
+        console.error('Auth check failed:', error);
         navigate('/admin');
       } finally {
         setLoading(false);

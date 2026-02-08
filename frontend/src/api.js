@@ -18,6 +18,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Handle 401 errors - clear token and redirect
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('adminToken');
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Auth
 export const login = async (username, password) => {
   const response = await api.post('/auth/login', { username, password });
