@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Preloader from './components/Preloader';
 import ScrollToTop from './components/ScrollToTop';
+import ScrollToTopOnNavigate from './components/ScrollToTopOnNavigate';
 import Home from './pages/Home';
 import Agp from './pages/Agp';
 import Projects from './pages/Projects';
@@ -17,6 +18,7 @@ import './index.css';
 function App() {
   return (
     <Router>
+      <ScrollToTopOnNavigate />
       <Preloader />
       <Routes>
         {/* Admin Routes - No Navbar/Footer */}
