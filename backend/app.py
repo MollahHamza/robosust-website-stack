@@ -1,24 +1,46 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from config import Config
 from models import db, Admin, Achievement, Initiative, Workshop, Alumni, Project, BlogPost, ForumCategory, ForumPost, ForumReply
+from functools import wraps
 import os
+import jwt
+import datetime
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 db.init_app(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 # Create uploads folder
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return Admin.query.get(int(user_id))
+# JWT token required decorator
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(' ')[1]
+
+        if not token:
+            return jsonify({'success': False, 'message': 'Token is missing'}), 401
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+            current_admin = Admin.query.get(data['admin_id'])
+            if not current_admin:
+                return jsonify({'success': False, 'message': 'Invalid token'}), 401
+        except jwt.ExpiredSignatureError:
+            return jsonify({'success': False, 'message': 'Token has expired'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'success': False, 'message': 'Invalid token'}), 401
+
+        return f(*args, **kwargs)
+    return decorated
 
 # Initialize database and create default admin
 def init_db():
@@ -54,26 +76,31 @@ def login():
     data = request.get_json()
     admin = Admin.query.filter_by(username=data.get('username')).first()
     if admin and admin.check_password(data.get('password')):
-        login_user(admin)
-        return jsonify({'success': True, 'message': 'Logged in successfully'})
+        token = jwt.encode({
+            'admin_id': admin.id,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7)
+        }, app.config['SECRET_KEY'], algorithm='HS256')
+        return jsonify({'success': True, 'token': token, 'message': 'Logged in successfully'})
     return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
 
 @app.route('/api/auth/logout', methods=['POST'])
-@login_required
 def logout():
-    logout_user()
     return jsonify({'success': True, 'message': 'Logged out successfully'})
 
 @app.route('/api/auth/check', methods=['GET'])
+@token_required
 def check_auth():
-    return jsonify({'authenticated': current_user.is_authenticated})
+    return jsonify({'authenticated': True})
 
 @app.route('/api/auth/change-password', methods=['POST'])
-@login_required
+@token_required
 def change_password():
     data = request.get_json()
-    if current_user.check_password(data.get('current_password')):
-        current_user.set_password(data.get('new_password'))
+    token = request.headers['Authorization'].split(' ')[1]
+    token_data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+    admin = Admin.query.get(token_data['admin_id'])
+    if admin.check_password(data.get('current_password')):
+        admin.set_password(data.get('new_password'))
         db.session.commit()
         return jsonify({'success': True, 'message': 'Password changed successfully'})
     return jsonify({'success': False, 'message': 'Current password is incorrect'}), 400
@@ -85,7 +112,7 @@ def get_achievements():
     return jsonify([a.to_dict() for a in achievements])
 
 @app.route('/api/achievements', methods=['POST'])
-@login_required
+@token_required
 def create_achievement():
     data = request.get_json()
     achievement = Achievement(
@@ -99,7 +126,7 @@ def create_achievement():
     return jsonify(achievement.to_dict()), 201
 
 @app.route('/api/achievements/<int:id>', methods=['PUT'])
-@login_required
+@token_required
 def update_achievement(id):
     achievement = Achievement.query.get_or_404(id)
     data = request.get_json()
@@ -111,7 +138,7 @@ def update_achievement(id):
     return jsonify(achievement.to_dict())
 
 @app.route('/api/achievements/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_achievement(id):
     achievement = Achievement.query.get_or_404(id)
     db.session.delete(achievement)
@@ -125,7 +152,7 @@ def get_initiatives():
     return jsonify([i.to_dict() for i in initiatives])
 
 @app.route('/api/initiatives', methods=['POST'])
-@login_required
+@token_required
 def create_initiative():
     data = request.get_json()
     initiative = Initiative(
@@ -140,7 +167,7 @@ def create_initiative():
     return jsonify(initiative.to_dict()), 201
 
 @app.route('/api/initiatives/<int:id>', methods=['PUT'])
-@login_required
+@token_required
 def update_initiative(id):
     initiative = Initiative.query.get_or_404(id)
     data = request.get_json()
@@ -153,7 +180,7 @@ def update_initiative(id):
     return jsonify(initiative.to_dict())
 
 @app.route('/api/initiatives/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_initiative(id):
     initiative = Initiative.query.get_or_404(id)
     db.session.delete(initiative)
@@ -167,7 +194,7 @@ def get_workshops():
     return jsonify([w.to_dict() for w in workshops])
 
 @app.route('/api/workshops', methods=['POST'])
-@login_required
+@token_required
 def create_workshop():
     data = request.get_json()
     workshop = Workshop(
@@ -182,7 +209,7 @@ def create_workshop():
     return jsonify(workshop.to_dict()), 201
 
 @app.route('/api/workshops/<int:id>', methods=['PUT'])
-@login_required
+@token_required
 def update_workshop(id):
     workshop = Workshop.query.get_or_404(id)
     data = request.get_json()
@@ -195,7 +222,7 @@ def update_workshop(id):
     return jsonify(workshop.to_dict())
 
 @app.route('/api/workshops/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_workshop(id):
     workshop = Workshop.query.get_or_404(id)
     db.session.delete(workshop)
@@ -209,7 +236,7 @@ def get_alumni():
     return jsonify([a.to_dict() for a in alumni])
 
 @app.route('/api/alumni', methods=['POST'])
-@login_required
+@token_required
 def create_alumni():
     data = request.get_json()
     alumni = Alumni(
@@ -226,7 +253,7 @@ def create_alumni():
     return jsonify(alumni.to_dict()), 201
 
 @app.route('/api/alumni/<int:id>', methods=['PUT'])
-@login_required
+@token_required
 def update_alumni(id):
     alumni = Alumni.query.get_or_404(id)
     data = request.get_json()
@@ -241,7 +268,7 @@ def update_alumni(id):
     return jsonify(alumni.to_dict())
 
 @app.route('/api/alumni/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_alumni(id):
     alumni = Alumni.query.get_or_404(id)
     db.session.delete(alumni)
@@ -255,7 +282,7 @@ def get_projects():
     return jsonify([p.to_dict() for p in projects])
 
 @app.route('/api/projects', methods=['POST'])
-@login_required
+@token_required
 def create_project():
     data = request.get_json()
     project = Project(
@@ -272,7 +299,7 @@ def create_project():
     return jsonify(project.to_dict()), 201
 
 @app.route('/api/projects/<int:id>', methods=['PUT'])
-@login_required
+@token_required
 def update_project(id):
     project = Project.query.get_or_404(id)
     data = request.get_json()
@@ -287,7 +314,7 @@ def update_project(id):
     return jsonify(project.to_dict())
 
 @app.route('/api/projects/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_project(id):
     project = Project.query.get_or_404(id)
     db.session.delete(project)
@@ -310,7 +337,7 @@ def get_blog_post(id):
     return jsonify(post.to_dict())
 
 @app.route('/api/blog', methods=['POST'])
-@login_required
+@token_required
 def create_blog_post():
     data = request.get_json()
     post = BlogPost(
@@ -326,7 +353,7 @@ def create_blog_post():
     return jsonify(post.to_dict()), 201
 
 @app.route('/api/blog/<int:id>', methods=['PUT'])
-@login_required
+@token_required
 def update_blog_post(id):
     post = BlogPost.query.get_or_404(id)
     data = request.get_json()
@@ -340,7 +367,7 @@ def update_blog_post(id):
     return jsonify(post.to_dict())
 
 @app.route('/api/blog/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_blog_post(id):
     post = BlogPost.query.get_or_404(id)
     db.session.delete(post)
@@ -354,7 +381,7 @@ def get_forum_categories():
     return jsonify([c.to_dict() for c in categories])
 
 @app.route('/api/forum/categories', methods=['POST'])
-@login_required
+@token_required
 def create_forum_category():
     data = request.get_json()
     category = ForumCategory(
@@ -398,7 +425,7 @@ def create_forum_post():
     return jsonify(post.to_dict()), 201
 
 @app.route('/api/forum/posts/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_forum_post(id):
     post = ForumPost.query.get_or_404(id)
     db.session.delete(post)
@@ -420,7 +447,7 @@ def create_forum_reply(post_id):
     return jsonify(reply.to_dict()), 201
 
 @app.route('/api/forum/replies/<int:id>', methods=['DELETE'])
-@login_required
+@token_required
 def delete_forum_reply(id):
     reply = ForumReply.query.get_or_404(id)
     db.session.delete(reply)
@@ -429,7 +456,7 @@ def delete_forum_reply(id):
 
 # ============ FILE UPLOAD ============
 @app.route('/api/upload', methods=['POST'])
-@login_required
+@token_required
 def upload_file():
     if 'file' not in request.files:
         return jsonify({'error': 'No file provided'}), 400
@@ -455,7 +482,7 @@ def serve_upload(filename):
 
 # ============ SEED DATA ============
 @app.route('/api/seed', methods=['POST'])
-@login_required
+@token_required
 def seed_data():
     achievements_data = [
         {'title': 'NASA Space Apps Challenge 2024', 'description': 'Team EcoQuest secured notable position with innovative environmental monitoring solution.', 'image': '/assets/images/work/NasaSpaceApp.jpg'},

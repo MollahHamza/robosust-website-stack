@@ -7,13 +7,35 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+});
+
+// Add token to requests automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('adminToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // Auth
-export const login = (username, password) => api.post('/auth/login', { username, password });
-export const logout = () => api.post('/auth/logout');
+export const login = async (username, password) => {
+  const response = await api.post('/auth/login', { username, password });
+  if (response.data.token) {
+    localStorage.setItem('adminToken', response.data.token);
+  }
+  return response;
+};
+
+export const logout = () => {
+  localStorage.removeItem('adminToken');
+  return api.post('/auth/logout');
+};
+
 export const checkAuth = () => api.get('/auth/check');
+
+export const isLoggedIn = () => !!localStorage.getItem('adminToken');
+
 export const changePassword = (currentPassword, newPassword) =>
   api.post('/auth/change-password', { current_password: currentPassword, new_password: newPassword });
 
