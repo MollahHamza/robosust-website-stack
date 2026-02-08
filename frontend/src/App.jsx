@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Preloader from './components/Preloader';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Agp from './pages/Agp';
 import Projects from './pages/Projects';
@@ -38,6 +39,7 @@ function App() {
               </Routes>
             </main>
             <Footer />
+            <ScrollToTop />
           </>
         } />
       </Routes>

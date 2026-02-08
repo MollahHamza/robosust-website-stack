@@ -84,7 +84,7 @@ function AdminLogin() {
         </form>
 
         <p style={{ marginTop: '20px', textAlign: 'center', color: 'var(--color-6)', fontSize: '0.9rem' }}>
-          Default: admin / robosust2024
+          RoboSUST Admin Panel
         </p>
       </div>
     </div>

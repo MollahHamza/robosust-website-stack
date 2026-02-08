@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 db.init_app(app)
 login_manager = LoginManager()
@@ -24,12 +24,12 @@ def load_user(user_id):
 def init_db():
     with app.app_context():
         db.create_all()
-        if not Admin.query.filter_by(username='admin').first():
-            admin = Admin(username='admin')
-            admin.set_password('robosust2024')
+        if not Admin.query.filter_by(username='robosust2026').first():
+            admin = Admin(username='robosust2026')
+            admin.set_password('robosust2077')
             db.session.add(admin)
             db.session.commit()
-            print("Default admin created: admin / robosust2024")
+            print("Default admin created: robosust2026 / robosust2077")
 
         if not ForumCategory.query.first():
             categories = [
