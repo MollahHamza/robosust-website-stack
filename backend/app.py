@@ -24,12 +24,19 @@ def load_user(user_id):
 def init_db():
     with app.app_context():
         db.create_all()
+        # Remove old admin user if exists
+        old_admin = Admin.query.filter_by(username='admin').first()
+        if old_admin:
+            db.session.delete(old_admin)
+            db.session.commit()
+
+        # Create new admin if not exists
         if not Admin.query.filter_by(username='robosust2026').first():
             admin = Admin(username='robosust2026')
             admin.set_password('robosust2077')
             db.session.add(admin)
             db.session.commit()
-            print("Default admin created: robosust2026 / robosust2077")
+            print("Admin created: robosust2026")
 
         if not ForumCategory.query.first():
             categories = [
