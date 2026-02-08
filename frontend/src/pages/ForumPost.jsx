@@ -109,7 +109,13 @@ function ForumPost() {
             </div>
           )}
 
-          {/* Reply Form */}
+          {/* Reply Form - Coming Soon */}
+          <div style={{ marginTop: '40px', padding: '30px', background: 'var(--color-10)', borderRadius: '10px', textAlign: 'center' }}>
+            <h4 style={{ marginBottom: '10px', color: 'var(--color-5)' }}>Replies Coming Soon</h4>
+            <p style={{ color: 'var(--color-6)' }}>The reply feature will be available shortly.</p>
+          </div>
+
+          {/* UNCOMMENT TO ENABLE REPLY FORM
           <div style={{ marginTop: '40px', padding: '30px', background: 'var(--color-10)', borderRadius: '10px' }}>
             <h4 style={{ marginBottom: '20px' }}>Leave a Reply</h4>
             <form onSubmit={handleSubmitReply}>
@@ -149,6 +155,7 @@ function ForumPost() {
               </button>
             </form>
           </div>
+          */}
         </div>
       </section>
     </>

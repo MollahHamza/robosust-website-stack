@@ -94,11 +94,17 @@ function Forum() {
                 </button>
               ))}
             </div>
+            <span className="btn" style={{ background: 'var(--color-8)', color: '#fff', cursor: 'default' }}>
+              Coming Soon
+            </span>
+            {/* UNCOMMENT TO ENABLE NEW POST BUTTON
             <button className="btn btn-accent" onClick={() => setShowNewPost(true)}>
               New Post
             </button>
+            */}
           </div>
 
+          {/* UNCOMMENT TO ENABLE NEW POST MODAL
           {showNewPost && (
             <div className="modal-overlay" onClick={() => setShowNewPost(false)}>
               <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -165,6 +171,7 @@ function Forum() {
               </div>
             </div>
           )}
+          */}
 
           {loading ? (
             <div className="text-center">
